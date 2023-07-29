@@ -49,6 +49,12 @@ router.post("/", async function (req, res, next) {
 
 router.put("/:isbn", async function (req, res, next) {
   try {
+    if("isbn" in req.body) {
+      return next({
+        status: 400,
+        message: "Not allowed"
+      })
+    }
     const result = jsonschema.validate(req.body, bookSchema);
     if(!result.valid) {
       const errList = result.errors.map(err => err.stack);

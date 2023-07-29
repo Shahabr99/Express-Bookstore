@@ -12,9 +12,7 @@ beforeEach(async function() {
 });
 
 
-afterEach(async function() {
-  await db.query('DELETE FROM books')
-})
+
 
 
 describe('GET /books', function() {
@@ -57,7 +55,7 @@ describe("POST /books", function() {
 })
 
 
-describe("PUT /books/:id", function () {
+describe("PUT /books/:isbn", function () {
   test("Updates a single book", async function () {
     const response = await request(app)
         .put(`/books/${book_isbn}`)
@@ -90,6 +88,7 @@ describe("PUT /books/:id", function () {
         });
     expect(response.statusCode).toBe(400);
   });
+
   test("Responds 404 if can't find book in question", async function () {
     // delete book first
     await request(app)
@@ -99,6 +98,21 @@ describe("PUT /books/:id", function () {
   });
 });
 
-afterAll(async () => {
+
+describe("DELETE /books/:id", function () {
+  test("Deletes a single a book", async function () {
+    const response = await request(app)
+        .delete(`/books/${book_isbn}`)
+    expect(response.body).toEqual({message: "Book deleted"});
+  });
+});
+
+
+afterEach(async function () {
+  await db.query("DELETE FROM BOOKS");
+});
+
+
+afterAll(async function () {
   await db.end()
-})
+});
